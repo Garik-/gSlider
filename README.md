@@ -4,7 +4,7 @@
 
 ## Примеры использования
 - [diafan.ru](http://diafan.ru/)
-- [ik.diafantest.ru](http://ik.test.diafan.ru)
+- [ik.diafantest.ru](http://ik.diafantest.ru)
 
 ## Подключение
 ```js
