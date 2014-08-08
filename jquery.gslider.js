@@ -1,5 +1,5 @@
 /**
- * gSlider v0.0.1 - Fully loaded, responsive content slider
+ * gSlider v0.0.2 - Fully loaded, responsive content slider
  * https://github.com/Garik-/gslider/
  *
  * Copyright 2014, Gar|k - http://c0dedgarik.blogspot.ru/
@@ -20,11 +20,12 @@
 
     $.fn.gSlider = function(options) {
 
-        if (this.length == 0) return this;
+        if (this.length === 0)
+            return this;
 
         if (this.length > 1) {
             this.each(function() {
-                $(this).gSlider(options)
+                $(this).gSlider(options);
             });
             return this;
         }
@@ -57,7 +58,7 @@
             });
 
             var next = function() {
-                if (slider.nowSlideNumber == slider.sliderCount) {
+                if (slider.nowSlideNumber === slider.sliderCount) {
                     slider.nowSlideNumber = 1;
                 } else {
                     slider.nowSlideNumber += 1;
@@ -65,37 +66,55 @@
 
 
                 setBackground(slider.nowSlideNumber);
-            }
+            };
 
             var prev = function() {
-                if (slider.nowSlideNumber == 1) {
+                if (slider.nowSlideNumber === 1) {
                     slider.nowSlideNumber = slider.sliderCount;
                 } else {
                     slider.nowSlideNumber -= 1;
                 }
 
                 setBackground(slider.nowSlideNumber);
-            }
+            };
 
             setBackground(slider.nowSlideNumber);
-        }
+        };
 
-        var setBackground = function(index) {
+        var setBackground = function(index, duration, fade) {
 
-            var item = $(slider.settings.item + ':eq(' + (index - 1) + ')', el);
-            var imgSrc = item.data('bg');
+            var item;
+            switch (typeof index) {
+                case "number":
+                    item = $(slider.settings.item + ':eq(' + (index - 1) + ')', el);
+                    break;
+                case "object":
+                    item = $(index, el);
+                default:
+                    return false;
+            }
+
+            var imgSrc = item.data('src'),
+                    options = {
+                        duration: typeof duration !== "undefined" ? duration : slider.settings.duration,
+                        fade: typeof fade !== "undefined" ? fade : slider.settings.fade
+                    };
+
 
             if (imgSrc)
-                item.backstretch(imgSrc, {
-                    duration: slider.settings.duration,
-                    fade: slider.settings.fade
-                });
+                item.backstretch(imgSrc, options);
 
-        }
+        };
+
+        $(window).resize(function() {
+            $(slider.settings.item, el).each(function() {
+                setBackground(this, 0, 0);
+            });
+        });
 
         init();
 
         return this;
-    }
+    };
 
 })(jQuery);
